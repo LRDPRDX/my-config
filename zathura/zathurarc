@@ -1,0 +1,47 @@
+# dracula (colors are taken from dracula.vim --- colorscheme for VIM)
+set notification-error-bg       "#282a36" # bg  
+set notification-error-fg       "#ff5555" # red
+set notification-warning-bg     "#282a36" # bg
+set notification-warning-fg     "#ff5555" # red
+set notification-bg             "#282a36" # bg
+set notification-fg             "#f1fa8c" # yellow
+
+set completion-group-bg         "#343746" # bglight
+set completion-group-fg         "#f8f8f2" # fg
+set completion-bg               "#343746" # bglight
+set completion-fg               "#f8f8f2" # fg
+set completion-highlight-bg     "#424450" # bglighter
+set completion-highlight-fg     "#50fa7b" # green
+
+# Tabbed not tested yet
+set tabbar-bg                   "#ff555" # bglight 
+set tabbar-fg                   "#bd93f9" # purple
+set tabbar-focus-fg             "#282a36" # bg
+set tabbar-focus-bg             "#bd93f9" # purple 
+
+set index-bg                    "#282a36" # bg
+set index-fg                    "#f8f8f2" # fg
+set index-active-bg             "#343746" # bglight
+set index-active-fg             "#50fa7b" # green
+
+set inputbar-bg                 "#191a21" # bgdarker
+set inputbar-fg                 "#f8f8f2" # fg
+
+set statusbar-bg                "#191a21" # bgdarker
+set statusbar-fg                "#f8f8f2" # fg
+
+set highlight-color             "#bd93f9" # purple 
+set highlight-active-color      "#ff79c6" # pink
+
+set render-loading-bg           "191a21"  # bgdarker
+set render-loading-fg           "50fa7b"  # bgdarker
+
+set default-bg                  "#282a36" # bg
+set default-fg                  "#f8f8f2" # fg
+
+set font                        "hermit normal 10" 
+
+# Recoloring
+set recolor                     true
+set recolor-lightcolor          "#282a36" # bg
+set recolor-darkcolor           "#f8f8f2" # fg

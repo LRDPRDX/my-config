@@ -1,0 +1,121 @@
+# i3blocks config file
+#
+# Please see man i3blocks for a complete reference!
+# The man page is also hosted at http://vivien.github.io/i3blocks
+#
+# List of valid properties:
+#
+# align
+# color
+# command
+# full_text
+# instance
+# interval
+# label
+# min_width
+# name
+# separator
+# separator_block_width
+# short_text
+# signal
+# urgent
+
+# Global properties
+#
+# The top properties below are applied to every block, but can be overridden.
+# Each block command defaults to the script name to avoid boilerplate.
+#
+# Change the command path (everything before $BLOCK_PATH)
+# to actual path
+command=$HOME/.config/i3blocks/scripts/$BLOCK_NAME
+separator_block_width=10
+markup=none
+
+# Below the properties/variables written in CAPS
+# are user-defined and are supposed to be changed
+
+# COLORS (dracula.vim as a base, accessible inside scripts)
+I3B_COLOR_GOOD=#50FA7B      # green
+I3B_COLOR_DEGRADED=#f1fa8c  # yellow
+I3B_COLOR_BAD=#ff5555       # red
+I3B_COLOR=#50FA7B           # default "colored" color (green)
+
+# WEATHER
+[weather]
+interval=300
+LOCATION=Akademgorodok
+
+# VOLUME
+[volume]
+label=♪:
+interval=once
+signal=20
+separator=true
+
+# DISK
+# 1.Available space
+# 1.1 root dir
+[disk /]
+label=🐧:
+interval=30
+# 1.2 home dir
+[disk /home]
+label=⌂:
+interval=30
+## 2. Temperature
+[disk_temp]
+label=🌡💾:
+interval=10
+THRESHOLD=60
+
+# CPU
+# 1.1 Temperature
+[cpu_temp]
+label=🌡▣:
+interval=10
+THRESHOLD=80
+# 1.2 Load
+[cpu_load]
+label=⚛:
+interval=10
+THRESHOLD=2.8
+
+# NETWORK
+# 1.1 Wi-Fi
+[network]
+label=📡:
+interval=5
+INTERFACE=wlp2s0
+# 1.2 ethernet
+[network]
+label=🖧:
+interval=5
+INTERFACE=enp1s0
+
+# BATTERY 
+[battery]
+label=🔋:
+interval=10
+BATTERY_DIR=/sys/class/power_supply/BAT1
+THRESHOLD=10
+
+# DATE TIME
+[time]
+label=🕐:
+command=date '+%d %H:%M:%S'
+interval=5
+
+# KEYBOARD
+# 1.1 layout
+[layout]
+signal=21
+interval=once
+# 1.2 button to disable keyboard
+[keyboard]
+full_text="⌨"
+interval=0
+
+# Touchpad
+[touchpad]
+full_text="🗖 "
+interval=0
