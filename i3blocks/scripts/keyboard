@@ -20,14 +20,14 @@ END {
 echo "⌨"
 echo "⌨"
 
-ID=$(xinput list | awk "$AWK_CODE")
-DISABLED=$(xinput --list --long | grep -A 1 "id=$ID" | grep -o "disabled")
+ID=$(xinput list | awk "${AWK_CODE}")
+DISABLED=$(xinput --list --long | grep -A 1 "id=${ID}" | grep -o "disabled")
 
-if [ -n "$DISABLED" ]; then
-    xinput enable "$ID"
+if [ -n "${DISABLED}" ]; then
+    xinput enable "${ID}"
     notify-send -u low "Erfolg!" "Keyboard enabled."
 else
-    xinput disable "$ID"
+    xinput disable "${ID}"
     notify-send -u normal "Beachten." "Keyboard disabled."
-    echo "$I3B_COLOR_BAD"
+    echo "${I3B_COLOR_BAD}"
 fi

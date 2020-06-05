@@ -15,17 +15,17 @@ END {
 }'
 
 RESULT=$(amixer -D pulse get Master | awk "$AWK_CODE" )
-VOLUME=$(echo $RESULT | awk '{print $1}')
-STATUS=$(echo $RESULT | awk '{print $2}')
+VOLUME=$(echo ${RESULT} | awk '{print $1}')
+STATUS=$(echo ${RESULT} | awk '{print $2}')
 
-if [ "$VOLUME" -gt 100 ] && [ "$STATUS" = "on" ]; then
+if [ "${VOLUME}" -gt 100 ] && [ "${STATUS}" = "on" ]; then
     pkill -CONT i3blocks
     notify-send -u normal -t 2000 "Beachten." "Volume level is above 100%."
 fi
 
-echo "$VOLUME% $STATUS"
-echo "$VOLUME% $STATUS"
+echo "${VOLUME}% ${STATUS}"
+echo "${VOLUME}% ${STATUS}"
 
-if [ "$STATUS" == "off" ]; then
-    echo "$I3B_COLOR_DEGRADED"
+if [ "${STATUS}" = "off" ]; then
+    echo "${I3B_COLOR_DEGRADED}"
 fi

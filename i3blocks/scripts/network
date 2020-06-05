@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # check if the interface is up
-OPERSTATE=$(cat /sys/class/net/$INTERFACE/operstate)
+OPERSTATE=$(cat /sys/class/net/${INTERFACE}/operstate)
 
-if [ "$OPERSTATE" == "down" ]; then
+if [ "${OPERSTATE}" = "down" ]; then
     echo "Down"
     echo "Down"
     exit 33         # automatically prints text in red
 fi
 
-STATUS=$(nmcli device status | awk -v dev=$INTERFACE '{if ($1 == dev) { print $3 } }')
+STATUS=$(nmcli device status | awk -v dev=${INTERFACE} '{if ($1 == dev) { print $3 } }')
 
-if ! [ "$STATUS" == "connected" ]; then
-    echo "$STATUS"
-    echo "$STATUS"
+if ! [ "${STATUS}" == "connected" ]; then
+    echo "${STATUS}"
+    echo "${STATUS}"
     exit 33         # automatically prints text in red
 fi
 
@@ -32,14 +32,15 @@ END {
 }
 '
 
-QUALITY_STR=$(iwconfig $INTERFACE | awk "$AWK_CODE")
+QUALITY_STR=$(iwconfig ${INTERFACE} | awk "${AWK_CODE}")
 QUALITY=
 
-if [ -n "$QUALITY_STR" ]; then
-    QUALITY=$(echo "100 * $QUALITY_STR" | bc)
-    if [ -n "$THRESHOLD" ] && [ $QUALITY -le $THRESHOLD ]; then
-        I3B_COLOR="$I3B_COLOR_DEGRADED"
+if [ -n "${QUALITY_STR}" ]; then
+    QUALITY=$(echo "100 * ${QUALITY_STR}" | bc)
+    if [ -n "${THRESHOLD}" ] && [ ${QUALITY} -le ${THRESHOLD} ]; then
+        I3B_COLOR="${I3B_COLOR_DEGRADED}"
     fi
+    QUALITY="${QUALITY}%:"
 fi
 
 
@@ -74,36 +75,36 @@ echo "${OLD_TIME} ${RX} ${TX}" > "${OLD_DATA_FILE}"
 
 # parse old data and calc time passed
 OLD_DATA=(${OLD_DATA//;/ })
-TIME_DIFF=$(( $OLD_TIME - ${OLD_DATA[0]} ))
+TIME_DIFF=$(( ${OLD_TIME} - ${OLD_DATA[0]} ))
 
 # sanity check: has a positive amount of time passed
 [[ "${TIME_DIFF}" -gt 0 ]] || exit
 
 # calc bytes transferred, and their rate in byte/s
-RX_DIFF=$(( $RX - ${OLD_DATA[1]} ))
-TX_DIFF=$(( $TX - ${OLD_DATA[2]} ))
-RX_RATE=$(( $RX_DIFF / $TIME_DIFF ))
-TX_RATE=$(( $TX_DIFF / $TIME_DIFF ))
+RX_DIFF=$(( ${RX} - ${OLD_DATA[1]} ))
+TX_DIFF=$(( ${TX} - ${OLD_DATA[2]} ))
+RX_RATE=$(( ${RX_DIFF} / ${TIME_DIFF} ))
+TX_RATE=$(( ${TX_DIFF} / ${TIME_DIFF} ))
 
 # shift by 10 bytes to get KiB/s. If the value is larger than
 # 1024^2 = 1048576, then display MiB/s instead
 
 # incoming
-RX_KIB=$(( $RX_RATE >> 10 ))
-if hash bc 2>/dev/null && [[ "$RX_RATE" -gt 1048576 ]]; then
-    RX_KIB=$(printf '%sM' $(echo "scale=1; $RX_KIB / 1024" | bc))
+RX_KIB=$(( ${RX_RATE} >> 10 ))
+if hash bc 2>/dev/null && [[ "${RX_RATE}" -gt 1048576 ]]; then
+    RX_KIB=$(printf '%sM' $(echo "scale=1; ${RX_KIB} / 1024" | bc))
 else
     RX_KIB="${RX_KIB}K"
 fi
 
 # outgoing
-TX_KIB=$(( $TX_RATE >> 10 ))
-if hash bc 2>/dev/null && [[ "$TX_RATE" -gt 1048576 ]]; then
-    TX_KIB=$(printf '%sM' $(echo "scale=1; $TX_KIB / 1024" | bc))
+TX_KIB=$(( ${TX_RATE} >> 10 ))
+if hash bc 2>/dev/null && [[ "${TX_RATE}" -gt 1048576 ]]; then
+    TX_KIB=$(printf '%sM' $(echo "scale=1; ${TX_KIB} / 1024" | bc))
 else
     TX_KIB="${TX_KIB}K"
 fi
 
-echo "$QUALITY%:$RX_KIB|$TX_KIB"
-echo "$QUALITY%:$RX_KIB|$TX_KIB"
-echo "$I3B_COLOR"
+echo "${QUALITY}${RX_KIB}|${TX_KIB}"
+echo "${QUALITY}${RX_KIB}|${TX_KIB}"
+echo "${I3B_COLOR}"
