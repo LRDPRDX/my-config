@@ -1,0 +1,49 @@
+#!/bin/bash
+
+XMOBAR_SCRIPTS_DIR=/home/lrdprdx/.config/xmobar
+
+if ! [ -d ${XMOBAR_SCRIPTS_DIR} ]; then
+    echo "no cfg dir found"
+    exit 33
+fi
+
+declare -i HIGH_THR
+declare -i LOW_THR
+
+while [[ $# -ge 0 ]] do
+    case ${1} in
+        -H|--High)
+            HIGH_THR="${2}"
+            shift 2
+            ;;
+        -L|--Low)
+            LOW_THR="${2}"
+            shift 2
+            ;;
+        -h|--high) 
+            HIGH_CLR="${2}"
+            shift 2
+            ;;
+        -n|--normal)
+            NORMAL_CLR="${2}"
+            shift 2
+            ;;
+        -l|--low)
+            LOW_CLR="${2}"
+            shift 2
+            ;;
+        *)
+            echo "Programming error"
+            exit 3
+            ;;
+    esac
+done
+
+if [[ $# -ne 1 ]]; then
+    echo "${0}: A single name of the script is required."
+    exit 4
+else
+    ${XMOBAR_SCRIPTS_DIR}/${1}
+fi
+
+echo "HIGH_THR: ${HIGH_THR}"

@@ -1,0 +1,39 @@
+#!/bin/bash
+
+BATTERY_DIR=/sys/class/power_supply/BAT1
+THRESHOLD=10
+
+AWK_CODE='BEGIN {
+    FS="=";
+    status="";
+    capacity=0;
+}
+{
+    if ($0 ~ /STATUS/) {
+        status=$2;
+    }
+    else if ($0 ~ /CAPACITY=/ ) {
+        capacity=$2;
+    }
+}
+END {
+    print status " " capacity;
+}
+'
+
+if ! [ -d "${BATTERY_DIR}" ]; then
+    echo "No battery"
+    exit 1 
+fi
+
+RESULT=$(cat "${BATTERY_DIR}/uevent" | awk "$AWK_CODE")
+STATUS=$(echo "${RESULT}" | awk '{print $1}')
+CAPACITY=$(echo "${RESULT}" | awk '{print $2}')
+
+if [ "${STATUS}" = "Discharging" ]; then
+    if [ ${CAPACITY} -le ${THRESHOLD} ]; then
+        notify-send --urgency=critical "ACHTUNG!" "Battery level is critically low!"
+    fi
+fi
+
+echo "${CAPACITY}%"
