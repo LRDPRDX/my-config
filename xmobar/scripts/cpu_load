@@ -1,0 +1,12 @@
+#!/bin/bash
+
+CPU_LOAD="$(cat /proc/loadavg | awk '{print $2}')"  #cpu load over the last 5 minutes
+
+if [ -n "${LOW_THR}" ]; then
+    if [ "$(echo "${CPU_LOAD} > ${LOW_THR}" | bc -l)" = "1" ]; then
+        notify-send -u critical "ACHTUNG!" "CPU is overloaded!"
+        xmbr_colorify "${CPU_LOAD}" "${LOW_CLR}"
+    fi
+fi
+
+xmbr_colorify "${CPU_LOAD}" "${NORMAL_CLR}"

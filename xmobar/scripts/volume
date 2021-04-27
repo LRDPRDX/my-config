@@ -1,0 +1,29 @@
+#!/bin/bash
+
+AWK_CODE='BEGIN {
+    volume[""]=0;
+    status[""]=0;
+}
+{
+    if( $0 ~ /Right:/ ) {
+       volume["right"]=substr($5, 2, length($5)-3);
+        status["right"]=substr($6, 2, length($6)-2);
+    }
+}
+END {
+    print volume["right"] " " status["right"];
+}'
+
+RESULT=$(amixer -D pulse get Master | awk "$AWK_CODE" )
+VOLUME=$(echo ${RESULT} | awk '{print $1}')
+STATUS=$(echo ${RESULT} | awk '{print $2}')
+
+if [ "${VOLUME}" -gt 100 ] && [ "${STATUS}" = "on" ]; then
+    notify-send -u normal -t 2000 "Beachten." "Volume level is above 100%."
+fi
+
+if [ "${STATUS}" = "off" ]; then
+    xmbr_colorify "${VOLUME}%" "${LOW_CLR}" 
+fi
+
+xmbr_colorify "${VOLUME}%" "${NORMAL_CLR}"

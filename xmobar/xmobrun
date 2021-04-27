@@ -1,16 +1,51 @@
 #!/bin/bash
+set -o errexit -o pipefail -o noclobber -o nounset
 
-XMOBAR_SCRIPTS_DIR=/home/lrdprdx/.config/xmobar
-
-if ! [ -d ${XMOBAR_SCRIPTS_DIR} ]; then
-    echo "no cfg dir found"
-    exit 33
+! getopt --test > /dev/null
+if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
+    echo 'I’m sorry, `getopt --test` failed in this environment.'
+    exit 1
 fi
 
-declare -i HIGH_THR
-declare -i LOW_THR
+XMOBAR_SCRIPTS_DIR=/home/lrdprdx/.config/xmobar/scripts
+OPTIONS=H:L:h:n:l:i:
+LONGOPTIONS=High:,Low:,high:,normal:,low:,instance:
 
-while [[ $# -ge 0 ]] do
+ERR_NO_SCRIPT_DIR_FOUND=11
+ERR_BAD_FORMAT=12
+ERR_INVALID_OPTION=13
+ERR_NO_SCRIPT_SPECIFIED=14
+ERR_BAD_SCRIPT=15
+
+function xmbr_colorify {
+    echo "<fc=${2}>${1}</fc>"
+    exit 0
+}
+export -f xmbr_colorify
+
+declare -x LOCATION             # for weather
+declare -x INSTANCE
+declare -x HIGH_THR
+declare -x LOW_THR
+declare -x HIGH_CLR="#50fa7b"   # green
+declare -x NORMAL_CLR="#f8f8f2" # foreground
+declare -x LOW_CLR="#ff5555"    # red
+
+
+if ! [ -d ${XMOBAR_SCRIPTS_DIR} ]; then
+    echo "invalid script dir"
+    exit ${ERR_NO_SCRIPT_DIR_FOUND} 
+fi
+
+! GETOPT_OUTPUT=$(getopt --options=${OPTIONS} --longoptions=${LONGOPTIONS} --name "${0}" -- "$@" 2> /dev/null)
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+    echo "bad command"
+    exit ${ERR_BAD_FORMAT} 
+fi
+
+eval set -- "${GETOPT_OUTPUT}"
+
+while true; do
     case ${1} in
         -H|--High)
             HIGH_THR="${2}"
@@ -32,18 +67,24 @@ while [[ $# -ge 0 ]] do
             LOW_CLR="${2}"
             shift 2
             ;;
+        -i|--instance)
+            INSTANCE="${2}"
+            shift 2
+            ;;
+        --)
+            shift
+            break
+            ;;
         *)
-            echo "Programming error"
-            exit 3
+            echo "invalid opt"
+            exit ${ERR_INVALID_OPTION} 
             ;;
     esac
 done
 
 if [[ $# -ne 1 ]]; then
-    echo "${0}: A single name of the script is required."
-    exit 4
+    echo "no script"
+    exit ${ERR_NO_SCRIPT_SPECIFIED} 
 else
     ${XMOBAR_SCRIPTS_DIR}/${1}
 fi
-
-echo "HIGH_THR: ${HIGH_THR}"

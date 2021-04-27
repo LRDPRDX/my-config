@@ -1,0 +1,10 @@
+#!/bin/bash
+
+CPU_TEMP="$(cat /sys/class/thermal/thermal_zone0/temp | awk '{print $1/1000}')"
+
+if [ "${CPU_TEMP}" -ge "${LOW_THR}" ]; then
+    notify-send -u critical "ACHTUNG!" "CPU is overheating!"
+    xmbr_colorify "${CPU_TEMP}°C" "${LOW_CLR}"
+fi
+
+xmbr_colorify "${CPU_TEMP}°C" "${NORMAL_CLR}"

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DISK_TEMP="$(sudo smartctl -a /dev/sda | awk '/Temperature/ {print $10}')"
+
+if [ ${DISK_TEMP} -ge ${LOW_THR} ]; then
+    notify-send -u critical "ACHTUNG!" "SSD is overheating!"
+    xmbr_colorify "${DISK_TEMP}°C" "${LOW_CLR}"
+fi
+
+xmbr_colorify "${DISK_TEMP}°C" "${NORMAL_CLR}"

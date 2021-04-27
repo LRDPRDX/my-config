@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "${INSTANCE}" ]; then
+    xmbr_colorify "No location" "${LOW_CLR}" 
+fi
+
+RESULT=$(curl --silent wttr.in/${INSTANCE}?format="%c+%t+%h+%w+%m")
+
+if [ "$?" != "0" ]; then
+    xmbr_colorify "No data" "${LOW_CLR}"
+else
+    RESULT=$(echo "${RESULT}" | gawk '{print gensub(/[^a-zA-Z0-9\-%° ]/, "<fn=1>\\0</fn>", "g", $0);}')
+    xmbr_colorify "${RESULT}" "${NORMAL_CLR}" 
+fi

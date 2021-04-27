@@ -1,0 +1,5 @@
+#!/bin/bash
+
+DISK_AVAIL="$(df -h ${INSTANCE} | awk '{if ( NR == 2 ) print $4}')"
+
+echo "${DISK_AVAIL}" # full_text

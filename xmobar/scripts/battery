@@ -1,8 +1,5 @@
 #!/bin/bash
 
-BATTERY_DIR=/sys/class/power_supply/BAT1
-THRESHOLD=10
-
 AWK_CODE='BEGIN {
     FS="=";
     status="";
@@ -21,19 +18,20 @@ END {
 }
 '
 
-if ! [ -d "${BATTERY_DIR}" ]; then
+if ! [ -d "${INSTANCE}" ]; then
     echo "No battery"
     exit 1 
 fi
 
-RESULT=$(cat "${BATTERY_DIR}/uevent" | awk "$AWK_CODE")
+RESULT=$(cat "${INSTANCE}/uevent" | awk "$AWK_CODE")
 STATUS=$(echo "${RESULT}" | awk '{print $1}')
 CAPACITY=$(echo "${RESULT}" | awk '{print $2}')
 
 if [ "${STATUS}" = "Discharging" ]; then
-    if [ ${CAPACITY} -le ${THRESHOLD} ]; then
+    if [ ${CAPACITY} -le ${LOW_THR} ]; then
         notify-send --urgency=critical "ACHTUNG!" "Battery level is critically low!"
+        xmbr_colorify "${CAPACITY}%" "${LOW_CLR}"
     fi
 fi
 
-echo "${CAPACITY}%"
+xmbr_colorify "${CAPACITY}%" "${NORMAL_CLR}" 
