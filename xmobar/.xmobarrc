@@ -1,0 +1,42 @@
+Config
+{
+    -- Appearance
+    font = "xft:Hermit:size=9",
+    additionalFonts = ["xft:Sans Serif"],
+    bgColor = "#282a36",
+    fgColor = "#f8f8f2",
+    border =  BottomB,
+    borderColor = "black",
+    lowerOnStart = True,
+    hideOnStart = False,
+    persistent = True,
+
+    iconRoot = "/home/lrdprdx/.config/xmobar/icons",
+    -- Info displayed
+    commands =
+    [
+        -- Battery status. Specify path to battery info througth the -i option
+        Run Com "xmobrun" ["battery", "-L", "10", "-i", "/sys/class/power_supply/BAT1"] "battery_id" 100,
+        -- Disk space
+        Run Com "xmobrun" ["disk", "-i", "/"] "disk_sys_id" 100,
+        Run Com "xmobrun" ["disk", "-i", "/home"] "disk_home_id" 100,
+        -- Disk temp
+        Run Com "xmobrun" ["disk_temp", "-L", "60"] "disk_temp_id" 50,
+        -- CPU load
+        Run Com "xmobrun" ["cpu_load", "-L", "2.8"] "cpu_load_id" 50,
+        -- CPU temp
+        Run Com "xmobrun" ["cpu_temp", "-L", "80"] "cpu_temp_id" 50,
+        -- Network
+        -- Wifi
+        Run Com "xmobrun" ["network", "-L", "30", "-i", "wlp2s0"] "wifi_id" 50,
+        -- Eth 
+        Run Com "xmobrun" ["network", "-L", "30", "-i", "enp1s0"] "eth_id" 50,
+        Run Com "xmobrun" ["volume"] "vol_id" 10,
+        Run Com "xmobrun" ["weather", "-i", "akademgorodok"] "weather_id" 3000,
+        Run Date "%d %T" "date_id" 100,
+        Run Kbd [("ru", "RU"), ("us", "US")],
+        Run StdinReader
+    ]
+    , sepChar = "%"
+    , template = " %StdinReader% }{ %weather_id% | %vol_id% | %wifi_id% | %eth_id% | %disk_temp_id% | %cpu_temp_id% | %cpu_load_id% | %battery_id% | %disk_sys_id% | %disk_home_id% | %date_id% | %kbd% | <action=`xmobrun touchpad`><icon=tp.xpm/></action> | <action=`xmobrun keyboard`><icon=kb.xpm/></action> | "
+}
