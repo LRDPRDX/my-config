@@ -23,6 +23,10 @@ map <leader>c :set invcursorcolumn invcursorline<CR>
 "search and replace the word under the cursor
 :nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 
+" Show trailing whitepace and spaces before a tab:
+:highlight ExtraWhitespace ctermbg=red guibg=red
+:autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/
+
 "display line numbers:
 set number
 :nmap <C-N><C-N> :set invnumber<CR>
