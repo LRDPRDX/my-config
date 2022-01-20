@@ -35,7 +35,7 @@ i3lock \
 --datestr="%A, %m, %Y"  \
 --wrongtext="Nein!"     \
 --veriftext="Warte..."  \
---greetertext="Federal Security Service. Mail to paradox1859@gmail.com" \
+--greetertext="Federal Sugarity Service. Mail to paradox1859@gmail.com" \
 --noinputtext="Leeren"  \
 \
 --wrong-font=hermit     \
